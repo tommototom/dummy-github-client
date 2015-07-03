@@ -7,10 +7,10 @@ import com.github.app.networking.GithubApiService;
 import com.github.app.util.CommitCustomGsonDeserializer;
 import com.github.app.util.Constants;
 import com.github.app.util.net.PersistentCookieStore;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.squareup.okhttp.OkHttpClient;
+import io.realm.Realm;
+import io.realm.RealmObject;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -28,6 +28,7 @@ public class App extends Application {
     private static OkHttpClient sClient;
     private static RestAdapter sRestAdapter;
     private static GithubApiService sApiService;
+    private static Realm sRealmInstance;
 
 
     @Override
@@ -35,11 +36,26 @@ public class App extends Application {
         super.onCreate();
         sInstance = this;
 
-        initHttpCookieManager();
+        initHttpClientWithCookieManager();
 
         initRestAdapter();
+
+        initRealmObj();
     }
 
+    /**
+     *  makes http client use cookie manager based on SharedPreferences to store cookies after application gets killed
+     */
+    private void initHttpClientWithCookieManager() {
+        sClient = new OkHttpClient().setConnectionPool(new com.squareup.okhttp.ConnectionPool(3, 30 * 1000));
+
+        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ALL);
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        sClient.setCookieHandler(cookieManager);
+
+        final List<HttpCookie> cookies = ((CookieManager) sClient.getCookieHandler()).getCookieStore().getCookies();
+        Log.e("Cookies", "saved cookies' store size is: " + cookies.size());
+    }
 
     /**
      * creates and accepts custom Gson and request interceptors for Retrofit adapter
@@ -53,8 +69,18 @@ public class App extends Application {
         };
 
         Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES) // provides camel case recognization
                 .registerTypeAdapter(Commit.class, new CommitCustomGsonDeserializer())
+                .setExclusionStrategies(new ExclusionStrategy() { // solves gson's recursion which otherwise causes stackoverflowerror
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getDeclaringClass().equals(RealmObject.class);
+                    }
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
                 .create();
 
         sRestAdapter = new RestAdapter.Builder()
@@ -66,18 +92,8 @@ public class App extends Application {
     }
 
 
-    /**
-     *  makes http client use cookie manager based on SharedPreferences to store cookies after application gets killed
-     */
-    private void initHttpCookieManager() {
-        sClient = new OkHttpClient().setConnectionPool(new com.squareup.okhttp.ConnectionPool(3, 30 * 1000));
-
-        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ALL);
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        sClient.setCookieHandler(cookieManager);
-
-        final List<HttpCookie> cookies = ((CookieManager) sClient.getCookieHandler()).getCookieStore().getCookies();
-        Log.e("Cookies", "saved cookies' store size is: " + cookies.size());
+    private void initRealmObj() {
+        sRealmInstance = Realm.getInstance(this);
     }
 
 
@@ -97,5 +113,10 @@ public class App extends Application {
             sApiService = sRestAdapter.create(GithubApiService.class);
         }
         return sApiService;
+    }
+
+
+    public static Realm getRealmInstance() {
+        return sRealmInstance;
     }
 }

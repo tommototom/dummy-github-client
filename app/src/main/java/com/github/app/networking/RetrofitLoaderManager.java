@@ -21,6 +21,7 @@ public class RetrofitLoaderManager {
                 if (data.hasError()) {
                     callback.onLoadFailure(data.getException());
                 } else {
+                    //todo copy everything except images in local database
                     callback.onLoadSuccess(data.getResult());
                 }
             }

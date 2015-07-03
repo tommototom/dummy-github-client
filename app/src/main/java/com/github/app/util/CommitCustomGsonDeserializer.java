@@ -14,7 +14,7 @@ public class CommitCustomGsonDeserializer implements JsonDeserializer<Commit> {
     @Override
     public Commit deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         try {
-            JsonObject commitJson = (JsonObject) json.getAsJsonObject();
+            final JsonObject commitJson = json.getAsJsonObject();
             final String htmlUrl = commitJson.get("html_url").getAsString();
             final String sha = commitJson.get("sha").getAsString();
 

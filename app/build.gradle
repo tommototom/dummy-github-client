@@ -29,6 +29,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        // realm ads extra javax Processor in classpath, so need to prevent second manually
+        // todo find realm's provided lib?
+    }
 }
 
 dependencies {

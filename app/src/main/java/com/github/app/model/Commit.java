@@ -1,18 +1,29 @@
 package com.github.app.model;
 
-public class Commit {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
+import java.util.Date;
+
+public class Commit extends RealmObject{
+
+    @PrimaryKey
     private String sha;
-    private String htmlUrl; // site link
     private String author;
     private String message;
-    private Long date;
+    private long date;
+    private String htmlUrl; // site link
+
+
+    public Commit() {
+    }
 
     public Commit(String sha, String author, String htmlUrl, String message, Long date) {
         this.sha = sha;
         this.author = author;
         this.htmlUrl = htmlUrl;
         this.message = message;
+        if (date == null) date = new Date().getTime();
         this.date = date;
     }
 
@@ -22,7 +33,7 @@ public class Commit {
         private String htmlUrl; // site link
         private String author;
         private String message;
-        private Long date;
+        private long date;
 
         private Builder() {
         }
@@ -52,6 +63,7 @@ public class Commit {
         }
 
         public Builder withDate(Long date) {
+            if (date == null) date = new Date().getTime();
             this.date = date;
             return this;
         }
@@ -64,5 +76,46 @@ public class Commit {
             Commit commit = new Commit(sha, htmlUrl, author, message, date);
             return commit;
         }
+    }
+
+
+    public String getSha() {
+        return sha;
+    }
+
+    public void setSha(String sha) {
+        this.sha = sha;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public String getHtmlUrl() {
+        return htmlUrl;
+    }
+
+    public void setHtmlUrl(String htmlUrl) {
+        this.htmlUrl = htmlUrl;
     }
 }
