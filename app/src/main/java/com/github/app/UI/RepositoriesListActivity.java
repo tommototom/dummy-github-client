@@ -76,7 +76,6 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
     }
 
 
-    @PageableLoader
     private static class RepositoriesLoader extends RetrofitLoader<List<Repository>, GithubApiService> {
         private int page;
 
