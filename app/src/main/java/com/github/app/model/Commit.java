@@ -13,7 +13,7 @@ public class Commit extends RealmObject{
     private String message;
     private long date;
     private String htmlUrl; // site link
-
+    private int pageNum;
 
     public Commit() {
     }
@@ -117,5 +117,13 @@ public class Commit extends RealmObject{
 
     public void setHtmlUrl(String htmlUrl) {
         this.htmlUrl = htmlUrl;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 }

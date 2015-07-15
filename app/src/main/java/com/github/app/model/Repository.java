@@ -18,6 +18,7 @@ public class Repository extends RealmObject{
     private int forksCount;
     private int watchersCount;
     private String homepage;
+    private int pageNum;
 
 
     @SerializedName("private")
@@ -110,5 +111,13 @@ public class Repository extends RealmObject{
 
     public void setIsPrivate(Boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 }
