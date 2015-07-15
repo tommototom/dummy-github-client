@@ -4,6 +4,13 @@ import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
+import com.github.app.App;
+import com.github.app.db.RealmDao;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class RetrofitLoaderManager {
 
@@ -17,12 +24,23 @@ public class RetrofitLoaderManager {
             }
 
             @Override
-            public void onLoadFinished(Loader<Response<E>> loader, Response<E> data) {
+            public void onLoadFinished(Loader<Response<E>> l, Response<E> data) {
                 if (data.hasError()) {
                     callback.onLoadFailure(data.getException());
                 } else {
                     //todo copy everything except images in local database
-                    callback.onLoadSuccess(data.getResult());
+                    RealmDao dao = App.getDaoInstance();
+                    E result = data.getResult();
+
+                    if (isLoaderPageable(loader)) {
+                        RetrofitLoader rl = (RetrofitLoader) loader;
+                        dao.deletePage(rl.getEntityClass(), rl.getPageNumber());
+                        dao.saveAsPageable(result, rl.getPageNumber());
+                    } else {
+                        dao.delete(result);
+                        dao.save(result);
+                    }
+                    callback.onLoadSuccess(result);
                 }
             }
 
@@ -32,4 +50,10 @@ public class RetrofitLoaderManager {
             }
         });
     }
+
+
+    private static <E> boolean isLoaderPageable(Loader<Response<E>> loader) {
+        return loader instanceof RetrofitLoader && ((RetrofitLoader) loader).getPageNumber() != null;
+    }
+
 }

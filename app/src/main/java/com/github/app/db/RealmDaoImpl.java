@@ -6,6 +6,10 @@ import com.github.app.model.Commit;
 import com.github.app.model.Repository;
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RealmDaoImpl implements RealmDao{
@@ -103,6 +107,11 @@ public class RealmDaoImpl implements RealmDao{
         save(entities);
     }
 
+    @Override
+    public List findPage(Class<? extends RealmObject> modelClass, int page) {
+        RealmResults<? extends RealmObject> itemsWithPage = realm().where(modelClass).equalTo("pageNum", page).findAll();
+        return new ArrayList(itemsWithPage);
+    }
 
     private static Realm realm() {
         return App.getRealmInstance();

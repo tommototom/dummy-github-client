@@ -2,6 +2,8 @@ package com.github.app.db;
 
 import io.realm.RealmObject;
 
+import java.util.List;
+
 public interface RealmDao {
 
     void save(Object entity);
@@ -14,4 +16,5 @@ public interface RealmDao {
 
     <E> void saveAsPageable(E entities, int pageNum);
 
+    List findPage(Class<? extends RealmObject> modelClass, int page);
 }

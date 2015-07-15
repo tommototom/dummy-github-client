@@ -2,6 +2,8 @@ package com.github.app;
 
 import android.app.Application;
 import android.util.Log;
+import com.github.app.db.RealmDao;
+import com.github.app.db.RealmDaoImpl;
 import com.github.app.model.Commit;
 import com.github.app.networking.GithubApiService;
 import com.github.app.util.CommitCustomGsonDeserializer;
@@ -29,6 +31,7 @@ public class App extends Application {
     private static RestAdapter sRestAdapter;
     private static GithubApiService sApiService;
     private static Realm sRealmInstance;
+    private static RealmDaoImpl sDaoImpl;
 
 
     @Override
@@ -118,5 +121,10 @@ public class App extends Application {
 
     public static Realm getRealmInstance() {
         return sRealmInstance;
+    }
+
+    public static RealmDao getDaoInstance() {
+        if (sDaoImpl == null) sDaoImpl = new RealmDaoImpl();
+        return sDaoImpl;
     }
 }

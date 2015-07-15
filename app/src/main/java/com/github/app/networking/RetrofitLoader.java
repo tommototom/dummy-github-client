@@ -46,4 +46,11 @@ public abstract class RetrofitLoader<E, R> extends AsyncTaskLoader<Response<E>> 
     }
 
     public abstract E call(R service);
+
+    public abstract Class getEntityClass();
+
+    /**
+     * returns page number if data divided by pages or null otherwise
+     */
+    public abstract Integer getPageNumber();
 }

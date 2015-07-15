@@ -6,15 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.github.app.App;
 import com.github.app.R;
 import com.github.app.model.Repository;
-import com.github.app.networking.LoaderCallback;
-import com.github.app.networking.GithubApiService;
-import com.github.app.networking.RetrofitLoader;
-import com.github.app.networking.RetrofitLoaderManager;
+import com.github.app.networking.*;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
 
 import java.util.List;
@@ -45,17 +43,23 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
     @Override
     public void onLoadFailure(Exception ex) {
         Log.e("LOAD", ex.getMessage());
+//        Toast.makeText()
+        List page = App.getDaoInstance().findPage(Repository.class, mCurrentpage - 1);
+        attachDataToAdapter(page);
     }
 
     @Override
     public void onLoadSuccess(List<Repository> result) {
+        attachDataToAdapter(result);
+    }
+
+    void attachDataToAdapter(List<Repository> result) {
         if (mRecyclerAdapter == null) {
             initRecyclerView(result);
         } else {
             mRecyclerAdapter.attachLoadedData(result);
         }
     }
-
     private void initRecyclerView(List<Repository> repositories) {
         mRecyclerAdapter = new RepositoryRecyclerViewAdapter(repositories, this);
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -72,6 +76,7 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
     }
 
 
+    @PageableLoader
     private static class RepositoriesLoader extends RetrofitLoader<List<Repository>, GithubApiService> {
         private int page;
 
@@ -83,6 +88,16 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
         @Override
         public List<Repository> call(GithubApiService service) {
             return service.getRepositoriesList("jakewharton", page);
+        }
+
+        @Override
+        public Class getEntityClass() {
+            return Repository.class;
+        }
+
+        @Override
+        public Integer getPageNumber() {
+            return page;
         }
     }
 }
