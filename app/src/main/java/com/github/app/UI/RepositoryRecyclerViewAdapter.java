@@ -13,6 +13,7 @@ import com.github.app.R;
 import com.github.app.model.Repository;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<RepositoryRecyclerViewAdapter.RepoViewHolder> {
@@ -45,6 +46,12 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
     public List<Repository> getmRepositories() {
         return mRepositories;
     }
+
+    public void attachLoadedData(List<Repository> result) {
+        mRepositories.addAll(result);
+        notifyDataSetChanged();
+    }
+
 
     class RepoViewHolder extends RecyclerView.ViewHolder{
         @InjectView(R.id.repo_name_text_view)
