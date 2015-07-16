@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import com.github.app.App;
+import com.github.app.R;
 import com.github.app.util.Utils;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
@@ -23,12 +24,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) { //todo figure out why onCreate triggered instead of onNewIntent
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         if (wasOauthAndSucceed()) {
-            SharedPreferences sp = getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE);
             String requestCode = Utils.splitUriQuery(getIntent().getData()).get("code");;
-
             authorizeWithRequestCode(requestCode);
+        } else {
+            showAuthFailed();
         }
     }
 
@@ -48,12 +51,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 try {
                     Response response = App.getHttpClient().newCall(request).execute();
-
                     String query = response.body().string();
                     String token = Utils.splitUriQuery(query).get(ACCESS_TOKEN_KEY);
                     getSharedPreferences(APP_PREFS, MODE_PRIVATE)
-                            .edit().
-                            putString(ACCESS_TOKEN_KEY, token);
+                            .edit()
+                            .putString(ACCESS_TOKEN_KEY, token)
+                            .apply();
                     return true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -65,14 +68,18 @@ public class SplashScreenActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean wasSuccessful) {
                 if (wasSuccessful) {
                     Intent intent = new Intent(SplashScreenActivity.this, RepositoriesListActivity.class)
-                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(App.get(), "Auth failed", Toast.LENGTH_SHORT);
-                    finish();
+                    showAuthFailed();
                 }
             }
         }.execute();
+    }
+
+    private void showAuthFailed() {
+        Toast.makeText(App.get(), "Auth failed", Toast.LENGTH_SHORT);
+        finish();
     }
 
 

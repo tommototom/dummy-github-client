@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name = ".UI.SplashScreenActivity">
+        <activity android:name = ".UI.SplashScreenActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

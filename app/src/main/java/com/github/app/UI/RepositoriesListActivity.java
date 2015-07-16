@@ -43,7 +43,6 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
     @Override
     public void onLoadFailure(Exception ex) {
         Log.e("LOAD", ex.getMessage());
-//        Toast.makeText()
         List page = App.getDaoInstance().findPage(Repository.class, mCurrentpage - 1);
         attachDataToAdapter(page);
     }
