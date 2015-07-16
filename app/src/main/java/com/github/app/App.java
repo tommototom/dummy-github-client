@@ -118,6 +118,9 @@ public class App extends Application {
         return sApiService;
     }
 
+    public static OkHttpClient getHttpClient() {
+        return sClient;
+    }
 
     public static Realm getRealmInstance() {
         return sRealmInstance;
