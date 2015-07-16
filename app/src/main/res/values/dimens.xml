@@ -9,4 +9,8 @@
     <dimen name = "raw_title_text_size">16sp</dimen>
     <dimen name = "raw_common_text_size">12sp</dimen>
     <dimen name = "image_padding">8dp</dimen>
+    <dimen name = "login_edit_text_width">320dp</dimen>
+    <dimen name = "login_items_margin">32dp</dimen>
+    <dimen name = "login_image_size">120dp</dimen>
+    <dimen name = "image_top_margin">120dp</dimen>
 </resources>
