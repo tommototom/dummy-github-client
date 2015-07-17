@@ -102,10 +102,9 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     static class DateViewHolder extends RecyclerView.ViewHolder {
-        private static SimpleDateFormat sdf = new SimpleDateFormat("d MMMMM");
+        private static SimpleDateFormat sdf = new SimpleDateFormat("d MMMM");
         @InjectView(R.id.commits_title_tv)
         TextView titleTv;
-
 
         public DateViewHolder(View itemView) {
             super(itemView);
