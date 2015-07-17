@@ -49,6 +49,8 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
     }
 
     public void attachLoadedData(List<Repository> result) {
+        if (result == null || result.isEmpty()) return;
+
         mRepositories.addAll(result);
         notifyDataSetChanged();
     }

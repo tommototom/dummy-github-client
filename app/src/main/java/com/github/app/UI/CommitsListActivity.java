@@ -15,17 +15,22 @@ import com.github.app.networking.GithubApiService;
 import com.github.app.networking.LoaderCallback;
 import com.github.app.networking.RetrofitLoader;
 import com.github.app.networking.RetrofitLoaderManager;
+import com.github.app.util.Constants;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
 
 import java.util.List;
+
+import static com.github.app.util.Constants.*;
 
 public class CommitsListActivity extends AppCompatActivity implements LoaderCallback<List<Commit>> {
 
     @InjectView(R.id.commits_recycler_view)
     RecyclerView mRecyclerView;
 
-    private int mCurrentPage = 1;
     private CommitsRecyclerViewAdapter mRecyclerAdapter;
+    private int mCurrentPage = 1;
+    private String mRepoName;
+    private String mRepoOwner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +38,14 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
         setContentView(R.layout.activity_commits_list);
         ButterKnife.inject(this);
 
+        mRepoName = getIntent().getStringExtra(REPOSITORY_NAME_EXTRA);
+        mRepoOwner = getIntent().getStringExtra(REPO_OWNER_EXTRA);
+        getSupportActionBar().setTitle(mRepoName);
         runNewLoadDataTask();
     }
 
     private void runNewLoadDataTask() {
-        CommitsLoader loader = new CommitsLoader(mCurrentPage++, this, App.getApiService());
+        CommitsLoader loader = new CommitsLoader(this, App.getApiService(), mRepoOwner, mCurrentPage++, mRepoName);
         RetrofitLoaderManager.init(getLoaderManager(), mCurrentPage, loader, this); // provide loader id the same as page number
         // todo check if repo ids for pages interferes commit's loaders ids
     }
@@ -80,15 +88,22 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
 
     private static class CommitsLoader extends RetrofitLoader<List<Commit>, GithubApiService> {
         private int page;
+        private String accessToken;
+        private String owner;
+        private String repoName;
 
-        public CommitsLoader(int page, Context context, GithubApiService service) {
+        public CommitsLoader(Context context, GithubApiService service, String owner, int page, String repoName) {
             super(context, service);
+            this.owner = owner;
+            this.accessToken = context.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
+                    .getString(ACCESS_TOKEN_KEY, "");
             this.page = page;
+            this.repoName = repoName;
         }
 
         @Override
         public List<Commit> call(GithubApiService service) {
-            return service.getRepositoryCommit("jakewharton", "kotterknife", page);
+            return service.getRepositoryCommit(owner, repoName, accessToken, page);
         }
 
         @Override

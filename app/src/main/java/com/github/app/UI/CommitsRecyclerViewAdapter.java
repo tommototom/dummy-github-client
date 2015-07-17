@@ -70,6 +70,8 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void attachData(List<Commit> items) {
+        if (items == null || items.isEmpty()) return;
+
         List<CommitAdapterItem> adapterItems = Commit.toAdapterItems(items);
         addExcludingSameTitles(mCommits, adapterItems);
         notifyDataSetChanged();

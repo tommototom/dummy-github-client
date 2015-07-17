@@ -13,6 +13,7 @@ import com.github.app.App;
 import com.github.app.R;
 import com.github.app.model.Repository;
 import com.github.app.networking.*;
+import com.github.app.util.Constants;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
 
 import java.util.List;
@@ -77,15 +78,20 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
 
     private static class RepositoriesLoader extends RetrofitLoader<List<Repository>, GithubApiService> {
         private int page;
+        private Context context;
 
         public RepositoriesLoader(int page, Context context, GithubApiService service) {
             super(context, service);
             this.page = page;
+            this.context = context.getApplicationContext();
         }
 
         @Override
         public List<Repository> call(GithubApiService service) {
-            return service.getRepositoriesList("jakewharton", page);
+            String accessToken = context
+                    .getSharedPreferences(Constants.APP_PREFS, Context.MODE_PRIVATE)
+                    .getString(Constants.ACCESS_TOKEN_KEY, null);
+            return service.getUserRepositoriesList(accessToken, page);
         }
 
         @Override
