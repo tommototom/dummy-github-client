@@ -1,14 +1,20 @@
 package com.github.app.UI;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.app.R;
 import com.github.app.model.Commit;
 import com.github.app.model.CommitAdapterItem;
@@ -94,6 +100,8 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         @InjectView(R.id.commit_time_tv)
         TextView timeTv;
 
+        private Commit mCommit;
+
         public CommitViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
@@ -104,11 +112,33 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             messageTv.setText(commit.getMessage());
             authorTv.setText(commit.getAuthor());
             timeTv.setText(sdf.format(commit.getDate()));
+            mCommit = commit;
         }
 
         @Override
         public void onClick(View view) {
+            final Context context = messageTv.getContext();
+            new MaterialDialog.Builder(context)
+                    .title("SHA")
+                    .content(mCommit.getSha())
+                    .positiveText("Visit webpage")
+                    .negativeText("Copy SHA")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW)
+                                    .setData(Uri.parse(mCommit.getHtmlUrl()));
+                            context.startActivity(intent);
+                        }
 
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                            clipboard.setPrimaryClip(ClipData.newPlainText("asdsad", mCommit.getSha()));
+                            Toast.makeText(context, "Copied: " + mCommit.getSha(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .show();
         }
     }
 
