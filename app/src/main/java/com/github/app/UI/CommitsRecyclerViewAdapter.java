@@ -30,8 +30,8 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private List<CommitAdapterItem> mCommits;
 
 
-    public CommitsRecyclerViewAdapter(List<CommitAdapterItem> commitItems, Activity activity) {
-        mCommits = commitItems;
+    public CommitsRecyclerViewAdapter(List<Commit> commitItems, Activity activity) {
+        mCommits = Commit.toAdapterItems(commitItems);
         mContext = activity;
     }
 
@@ -59,8 +59,8 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void attachData(List<CommitAdapterItem> items) {
-        mCommits.addAll(items);
+    public void attachData(List<Commit> items) {
+        mCommits.addAll(Commit.toAdapterItems(items));
         //todo clear from duplicates
     }
 

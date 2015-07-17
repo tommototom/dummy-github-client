@@ -40,10 +40,11 @@ public class Commit extends RealmObject implements CommitAdapterItem {
     public static List<CommitAdapterItem> toAdapterItems(List<Commit> commits) {
         List<CommitAdapterItem> items = new ArrayList<>();
         items.add(new CommitsTitle(days(commits.get(0).getDate())));
+        items.add(commits.get(0));
 
         for (int i = 1, size = commits.size(); i < size; i++) {
             Commit commit = commits.get(i);
-            if (days(commit.getDate()) != days(commits.get(i - 1).getDate())) {
+            if (!haveSameDay(commit.getDate(), commits.get(i - 1).getDate())) {
                 items.add(CommitsTitle.fromCommit(commit));
             }
             items.add(commit);
