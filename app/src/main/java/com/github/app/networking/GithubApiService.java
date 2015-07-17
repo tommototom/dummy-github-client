@@ -15,14 +15,14 @@ public interface GithubApiService {
     @GET("/users/{username}")
     Owner getOwnerInfo(@Path("username") String owner);
 
-    @GET("/users/{username}/repos?per_page=" + Constants.REPOS_PER_PAGE) // todo pagination 'https://api.github.com/user/repos?page=2&per_page=100'
+    @GET("/users/{username}/repos?per_page=" + Constants.REPOS_PER_PAGE)
     List<Repository> getRepositoriesList(
             @Path("username") String owner,
             @Query("page") int pageNum);
 
-    @GET("/repos/{username}/{reponame}/commits")
+    @GET("/repos/{username}/{reponame}/commits?per_page=" + Constants.COMMITS_PER_PAGE)
     List<Commit> getRepositoryCommit(
             @Path("username") String owner,
-            @Path("reponame") String repositoryName
-    );
+            @Path("reponame") String repositoryName,
+            @Query("page") int pageNum);
 }

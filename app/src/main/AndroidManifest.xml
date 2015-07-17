@@ -28,6 +28,7 @@
         </activity>
 
         <activity android:name=".UI.RepositoriesListActivity"/>
+        <activity android:name = ".UI.CommitsListActivity"/>
     </application>
 
 </manifest>

@@ -1,9 +1,11 @@
 package com.github.app.util;
 
 import android.net.Uri;
+import android.util.TimeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Utils {
     public static Map<String, String> splitUriQuery(Uri uri) {
@@ -21,4 +23,9 @@ public class Utils {
 
         return map;
     }
+
+    public static long days(Long date) {
+        return TimeUnit.DAYS.toDays(date);
+    }
+
 }

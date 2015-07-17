@@ -11,4 +11,8 @@ public interface Constants {
 
     String GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     String ACCESS_TOKEN_KEY = "access_token"; //used in url parsing
+    String COMMITS_PER_PAGE = "20";
+
+    String REPOSITORY_NAME_EXTRA = "REPOSITORY_NAME_EXTRA";
+    String REPO_OWNER_EXTRA = "REPO_OWNER_EXTRA";
 }

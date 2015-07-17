@@ -1,6 +1,7 @@
 package com.github.app.UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.github.app.R;
 import com.github.app.model.Repository;
+import com.github.app.util.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<RepositoryRecyclerViewAdapter.RepoViewHolder> {
@@ -53,7 +54,7 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
     }
 
 
-    class RepoViewHolder extends RecyclerView.ViewHolder{
+    class RepoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @InjectView(R.id.repo_name_text_view)
         TextView repoNameTv;
         @InjectView(R.id.repo_author_image_view)
@@ -67,9 +68,13 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
         @InjectView(R.id.watches_count_text_view)
         TextView watchesCountTv;
 
+        private Repository repo;
+
+
         public RepoViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         void fillViews(Repository r) {
@@ -83,6 +88,18 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
                     .load(r.getOwner().getAvatarUrl())
 //                    .placeholder(R.drawable.ic_launcher)
                     .fit().into(authorImage);
+
+            repo = r;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Context activityContext = view.getContext();
+
+            Intent intent = new Intent(activityContext, CommitsListActivity.class);
+            intent.putExtra(Constants.REPOSITORY_NAME_EXTRA, repo.getName());
+            intent.putExtra(Constants.REPO_OWNER_EXTRA, repo.getOwner().getLogin());
+            activityContext.startActivity(intent);
         }
     }
 }

@@ -1,11 +1,16 @@
 package com.github.app.model;
 
+import com.github.app.util.Utils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class Commit extends RealmObject{
+import static com.github.app.util.Utils.*;
+
+public class Commit extends RealmObject implements CommitAdapterItem {
 
     @PrimaryKey
     private String sha;
@@ -25,6 +30,26 @@ public class Commit extends RealmObject{
         this.message = message;
         if (date == null) date = new Date().getTime();
         this.date = date;
+    }
+
+    /**
+     * returns the adapter representation
+     * @param commits
+     * @return
+     */
+    public static List<CommitAdapterItem> toAdapterItems(List<Commit> commits) {
+        List<CommitAdapterItem> items = new ArrayList<>();
+        items.add(new CommitsTitle(days(commits.get(0).getDate())));
+
+        for (int i = 1, size = commits.size(); i < size; i++) {
+            Commit commit = commits.get(i);
+            if (days(commit.getDate()) != days(commits.get(i - 1).getDate())) {
+                items.add(CommitsTitle.fromCommit(commit));
+            }
+            items.add(commit);
+        }
+
+        return items;
     }
 
 
