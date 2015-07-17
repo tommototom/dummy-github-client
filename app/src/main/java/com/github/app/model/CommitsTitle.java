@@ -20,4 +20,10 @@ public class CommitsTitle implements CommitAdapterItem{
     public void setDateTitle(Long dateTitle) {
         this.dateTitle = dateTitle;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof CommitsTitle && dateTitle.equals(((CommitsTitle) o).getDateTitle());
+    }
 }

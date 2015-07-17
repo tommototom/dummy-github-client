@@ -59,11 +59,6 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void attachData(List<Commit> items) {
-        mCommits.addAll(Commit.toAdapterItems(items));
-        //todo clear from duplicates
-    }
-
     @Override
     public int getItemCount() {
         return mCommits.size();
@@ -72,6 +67,20 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position) {
         return mCommits.get(position) instanceof Commit ? COMMIT_VIEW_TYPE : DATE_TITLE_VIEW_TYPE;
+    }
+
+    public void attachData(List<Commit> items) {
+        List<CommitAdapterItem> adapterItems = Commit.toAdapterItems(items);
+        addExcludingSameTitles(mCommits, adapterItems);
+        notifyDataSetChanged();
+    }
+
+    private void addExcludingSameTitles(List<CommitAdapterItem> mCommits, List<CommitAdapterItem> items) {
+        for (CommitAdapterItem item : items) {
+            if (!(item instanceof CommitsTitle && mCommits.contains(item))) {
+                mCommits.add(item);
+            }
+        }
     }
 
     static class CommitViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

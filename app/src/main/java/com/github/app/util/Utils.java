@@ -3,9 +3,7 @@ package com.github.app.util;
 import android.net.Uri;
 import android.util.TimeUtils;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
