@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-              android:orientation = "vertical"
-              android:layout_width = "match_parent"
-              android:layout_height = "match_parent">
+<android.support.v7.widget.CardView xmlns:android = "http://schemas.android.com/apk/res/android"
+                                    android:padding="@dimen/small_common_padding"
+                                    android:layout_width = "match_parent"
+                                    android:layout_height = "wrap_content">
+	<RelativeLayout
+			android:layout_width = "match_parent"
+			android:layout_height = "match_parent"
+	        android:padding="@dimen/small_common_padding"
+			>
 
-    <TextView
-            android:id="@+id/commit_message_tv"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:lines="2"
-            android:textColor="@color/textPrimary"
-            />
+		<TextView
+				android:id="@+id/commit_message_tv"
+				android:layout_width = "wrap_content"
+				android:layout_height = "wrap_content"
+				android:lines="2"
+				android:textColor="@color/textPrimary"
+				/>
 
-</LinearLayout>
+		<TextView
+				android:id="@+id/commit_author_tv"
+				android:layout_width = "wrap_content"
+				android:layout_height = "wrap_content"
+				android:lines="1"
+				android:layout_below="@id/commit_message_tv"
+				android:textColor="@color/accent"
+				/>
+
+		<TextView
+				android:id="@+id/commit_time_tv"
+				android:layout_width = "wrap_content"
+				android:layout_height = "wrap_content"
+		        android:textColor="@color/textSecondary"
+		        android:layout_alignParentBottom="true"
+		        android:layout_alignParentRight="true"
+				/>
+	</RelativeLayout>
+
+</android.support.v7.widget.CardView>

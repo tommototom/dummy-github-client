@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.github.app.App;
 import com.github.app.R;
@@ -31,6 +32,9 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commits_list);
+        ButterKnife.inject(this);
+
+        runNewLoadDataTask();
     }
 
     private void runNewLoadDataTask() {
@@ -53,7 +57,11 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
     }
 
     private void attachDataToAdapter(List<Commit> result) {
-
+        if (mRecyclerAdapter == null) {
+            initRecyclerView(result);
+        } else {
+            mRecyclerAdapter.attachData(Commit.toAdapterItems(result));
+        }
     }
 
     private void initRecyclerView(List<Commit> commits) {

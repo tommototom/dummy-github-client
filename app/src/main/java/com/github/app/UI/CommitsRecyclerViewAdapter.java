@@ -6,11 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.github.app.R;
 import com.github.app.model.Commit;
 import com.github.app.model.CommitAdapterItem;
+import com.github.app.model.CommitsTitle;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -32,18 +36,27 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public CommitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case COMMIT_VIEW_TYPE:
                 View v = LayoutInflater.from(mContext).inflate(R.layout.commits_list_raw, parent, false);
                 return new CommitViewHolder(v);
+            case DATE_TITLE_VIEW_TYPE:
+                View view = LayoutInflater.from(mContext).inflate(R.layout.commits_date_title, parent, false);
+                return new DateViewHolder(view);
         }
-        return null;
+        throw new IllegalArgumentException("Invalid holder and object bind");
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int pos) {
+        if (holder instanceof CommitViewHolder) {
+            ((CommitViewHolder) holder).fromCommit((Commit) mCommits.get(pos));
+        } else if (holder instanceof DateViewHolder) {
+            ((DateViewHolder) holder).fill((CommitsTitle) mCommits.get(pos));
+        } else {
+            throw new IllegalArgumentException("Invalid holder and object bind");
+        }
     }
 
     public void attachData(List<CommitAdapterItem> items) {
@@ -61,7 +74,14 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return mCommits.get(position) instanceof Commit ? COMMIT_VIEW_TYPE : DATE_TITLE_VIEW_TYPE;
     }
 
-    class CommitViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    static class CommitViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        @InjectView(R.id.commit_message_tv)
+        TextView messageTv;
+        @InjectView(R.id.commit_author_tv)
+        TextView authorTv;
+        @InjectView(R.id.commit_time_tv)
+        TextView timeTv;
 
         public CommitViewHolder(View itemView) {
             super(itemView);
@@ -69,6 +89,11 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             itemView.setOnClickListener(this);
         }
 
+        public void fromCommit(Commit commit) {
+            messageTv.setText(commit.getMessage());
+            authorTv.setText(commit.getAuthor());
+            timeTv.setText(sdf.format(commit.getDate()));
+        }
 
         @Override
         public void onClick(View view) {
@@ -76,11 +101,19 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    class DateViewHolder extends RecyclerView.ViewHolder {
+    static class DateViewHolder extends RecyclerView.ViewHolder {
+        private static SimpleDateFormat sdf = new SimpleDateFormat("d MMMMM");
+        @InjectView(R.id.commits_title_tv)
+        TextView titleTv;
+
 
         public DateViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+        }
+
+        public void fill(CommitsTitle title) {
+            titleTv.setText(sdf.format(title.getDateTitle()));
         }
     }
 

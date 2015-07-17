@@ -98,7 +98,7 @@ public class Commit extends RealmObject implements CommitAdapterItem {
         }
 
         public Commit build() {
-            Commit commit = new Commit(sha, htmlUrl, author, message, date);
+            Commit commit = new Commit(sha, author, htmlUrl, message, date);
             return commit;
         }
     }
