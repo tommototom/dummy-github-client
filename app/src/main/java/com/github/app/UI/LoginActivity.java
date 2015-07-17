@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RepositoriesListActivity.class)
                     .setFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_act_enter, R.anim.slide_act_exit);
         }
     }
 

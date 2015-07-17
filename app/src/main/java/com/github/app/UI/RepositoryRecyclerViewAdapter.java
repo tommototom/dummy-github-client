@@ -1,5 +1,6 @@
 package com.github.app.UI;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -102,6 +103,7 @@ public class RepositoryRecyclerViewAdapter extends RecyclerView.Adapter<Reposito
             intent.putExtra(Constants.REPOSITORY_NAME_EXTRA, repo.getName());
             intent.putExtra(Constants.REPO_OWNER_EXTRA, repo.getOwner().getLogin());
             activityContext.startActivity(intent);
+            ((Activity) activityContext).overridePendingTransition(R.anim.slide_act_enter, R.anim.slide_act_exit);
         }
     }
 }
