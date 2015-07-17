@@ -15,6 +15,7 @@ import com.github.app.model.Repository;
 import com.github.app.networking.*;
 import com.github.app.util.Constants;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
+import com.github.app.util.Utils;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
 
     @Override
     public void onLoadFailure(Exception ex) {
-        Log.e("LOAD", ex.getMessage());
+        Utils.notifyNetworkIssues(this, ex);
         List page = App.getDaoInstance().findReposAtPage(mCurrentpage - 1);
         attachDataToAdapter(page);
     }

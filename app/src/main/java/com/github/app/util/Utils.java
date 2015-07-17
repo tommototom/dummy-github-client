@@ -1,7 +1,9 @@
 package com.github.app.util;
 
+import android.content.Context;
 import android.net.Uri;
-import android.util.TimeUtils;
+import android.widget.Toast;
+import com.github.app.util.net.Connectivity;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -36,4 +38,18 @@ public class Utils {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
+    public static void notifyNetworkIssues(Context context, Exception ex) {
+        String messageText;
+        if (!Connectivity.isConnected(context)) {
+            messageText = "Network issues";
+        } else if (ex.getMessage().contains("404")) {
+            messageText = "Not found";
+        } else if (ex.getMessage().contains("403") || ex.getMessage().contains("401")) {
+            messageText = "Access issues";
+        } else {
+            messageText = "Unknown error";
+        }
+
+        Toast.makeText(context, messageText, Toast.LENGTH_SHORT).show();
+    }
 }
