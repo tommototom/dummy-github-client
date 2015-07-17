@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.github.app.App;
@@ -16,6 +17,7 @@ import com.github.app.networking.LoaderCallback;
 import com.github.app.networking.RetrofitLoader;
 import com.github.app.networking.RetrofitLoaderManager;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.List;
 
@@ -25,6 +27,8 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
 
     @InjectView(R.id.commits_recycler_view)
     RecyclerView mRecyclerView;
+    @InjectView(R.id.progress_wheel)
+    ProgressWheel mProgressWheel;
 
     private CommitsRecyclerViewAdapter mRecyclerAdapter;
     private int mCurrentPage = 1;
@@ -82,6 +86,8 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
 
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressWheel.setVisibility(View.GONE);
     }
 
 

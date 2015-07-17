@@ -15,4 +15,5 @@
     <dimen name = "image_top_margin">120dp</dimen>
     <dimen name = "commits_title_height">40dp</dimen>
     <dimen name = "title_margin">18dp</dimen>
+    <dimen name = "progress_size">96dp</dimen>
 </resources>
