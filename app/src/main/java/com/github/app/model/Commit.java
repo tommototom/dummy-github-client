@@ -19,17 +19,19 @@ public class Commit extends RealmObject implements CommitAdapterItem {
     private long date;
     private String htmlUrl; // site link
     private int pageNum;
+    private String repoName;
 
     public Commit() {
     }
 
-    public Commit(String sha, String author, String htmlUrl, String message, Long date) {
+    public Commit(String sha, String author, String htmlUrl, String message, Long date, String repoName) {
         this.sha = sha;
         this.author = author;
         this.htmlUrl = htmlUrl;
         this.message = message;
         if (date == null) date = new Date().getTime();
         this.date = date;
+        this.repoName = repoName;
     }
 
     /**
@@ -60,6 +62,7 @@ public class Commit extends RealmObject implements CommitAdapterItem {
         private String author;
         private String message;
         private long date;
+        private String repoName;
 
         private Builder() {
         }
@@ -94,12 +97,17 @@ public class Commit extends RealmObject implements CommitAdapterItem {
             return this;
         }
 
+        public Builder withRepoName(String name) {
+            this.repoName = name;
+            return this;
+        }
+
         public Builder but() {
             return aCommit().withSha(sha).withHtmlUrl(htmlUrl).withAuthor(author).withMessage(message).withDate(date);
         }
 
         public Commit build() {
-            Commit commit = new Commit(sha, author, htmlUrl, message, date);
+            Commit commit = new Commit(sha, author, htmlUrl, message, date, repoName);
             return commit;
         }
     }
@@ -151,5 +159,13 @@ public class Commit extends RealmObject implements CommitAdapterItem {
 
     public void setPageNum(int pageNum) {
         this.pageNum = pageNum;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 }

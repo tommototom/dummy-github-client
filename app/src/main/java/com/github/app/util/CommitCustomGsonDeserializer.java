@@ -5,6 +5,7 @@ import com.github.app.model.Commit;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -26,6 +27,8 @@ public class CommitCustomGsonDeserializer implements JsonDeserializer<Commit> {
             final String dateString = committer.getAsJsonObject().get("date").getAsString();
             final Long date = sdf.parse(dateString).getTime();
 
+            final String repoName = new URL(htmlUrl).getPath().split("/")[2]; //such hardcode
+
             return Commit.Builder.aCommit()
                     .withHtmlUrl(htmlUrl)
                     .withSha(sha)
@@ -33,6 +36,7 @@ public class CommitCustomGsonDeserializer implements JsonDeserializer<Commit> {
                     .withAuthor(author)
                     .withMessage(message)
                     .withDate(date)
+                    .withRepoName(repoName)
                     .build();
         } catch (Exception e) {
             Log.e("Json Parse", "Error parsing Commit message's json: ");

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.github.app.App;
@@ -44,7 +43,7 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
     @Override
     public void onLoadFailure(Exception ex) {
         Log.e("LOAD", ex.getMessage());
-        List page = App.getDaoInstance().findPage(Repository.class, mCurrentpage - 1);
+        List page = App.getDaoInstance().findReposAtPage(mCurrentpage - 1);
         attachDataToAdapter(page);
     }
 

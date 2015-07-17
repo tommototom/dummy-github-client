@@ -108,9 +108,20 @@ public class RealmDaoImpl implements RealmDao{
     }
 
     @Override
-    public List findPage(Class<? extends RealmObject> modelClass, int page) {
-        RealmResults<? extends RealmObject> itemsWithPage = realm().where(modelClass).equalTo("pageNum", page).findAll();
-        return new ArrayList(itemsWithPage);
+    public List<Repository> findReposAtPage(int page) {
+        return realm()
+                .where(Repository.class)
+                .equalTo("pageNum", page)
+                .findAll();
+    }
+
+    @Override
+    public List<Commit> findCommitsAtPage(int page, String repoName) {
+        return realm()
+                .where(Commit.class)
+                .equalTo("pageNum", page)
+                .equalTo("repoName", repoName)
+                .findAll();
     }
 
     private static Realm realm() {

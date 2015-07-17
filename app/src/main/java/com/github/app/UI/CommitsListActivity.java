@@ -15,7 +15,6 @@ import com.github.app.networking.GithubApiService;
 import com.github.app.networking.LoaderCallback;
 import com.github.app.networking.RetrofitLoader;
 import com.github.app.networking.RetrofitLoaderManager;
-import com.github.app.util.Constants;
 import com.github.app.util.EndlessRecyclerOnScrollListener;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
     @Override
     public void onLoadFailure(Exception ex) {
         Log.e("LOAD", ex.getMessage());
-        List page = App.getDaoInstance().findPage(Commit.class, mCurrentPage - 1);
+        List page = App.getDaoInstance().findCommitsAtPage(mCurrentPage - 1, mRepoName);
         attachDataToAdapter(page);
     }
 
