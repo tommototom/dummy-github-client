@@ -42,7 +42,6 @@ public class RepositoriesListActivity extends BaseActivity implements LoaderCall
     private void runNewLoadDataTask() {
         RepositoriesLoader loader = new RepositoriesLoader(mCurrentpage++, this, App.getApiService());
         RetrofitLoaderManager.init(getLoaderManager(), mCurrentpage, loader, this, dao()); // provide loader id the same as page number
-        // todo check if repo ids for pages interferes commit's loaders ids
     }
 
     @Override

@@ -84,7 +84,6 @@ public class RealmDaoImpl implements RealmDao{
      * searches for occurrence by id
      * @param modelClass table to search
      * @param id
-     * todo remove hardcode
      */
     public RealmObject findById(Class<? extends RealmObject> modelClass, Object id) {
         if (Commit.class == modelClass) { // key is string
@@ -94,7 +93,6 @@ public class RealmDaoImpl implements RealmDao{
         }
     }
 
-    //todo replace with smth common for entity classes
     @Override
     public <E> void saveAsPageable(E entities, int pageNum) {
         // assign page number to objects of applicable types

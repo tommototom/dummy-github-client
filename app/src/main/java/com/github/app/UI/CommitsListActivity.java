@@ -51,7 +51,6 @@ public class CommitsListActivity extends BaseActivity implements LoaderCallback<
     private void runNewLoadDataTask() {
         CommitsLoader loader = new CommitsLoader(this, App.getApiService(), mRepoOwner, mCurrentPage++, mRepoName);
         RetrofitLoaderManager.init(getLoaderManager(), mCurrentPage, loader, this, dao()); // provide loader id the same as page number
-        // todo check if repo ids for pages interferes commit's loaders ids
     }
 
     @Override

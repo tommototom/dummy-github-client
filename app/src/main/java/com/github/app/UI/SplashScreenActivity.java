@@ -20,7 +20,7 @@ import static com.github.app.util.Utils.*;
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) { //todo figure out why onCreate triggered instead of onNewIntent
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         if (getSupportActionBar() != null) getSupportActionBar().hide();

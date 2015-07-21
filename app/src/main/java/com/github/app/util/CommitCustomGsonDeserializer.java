@@ -41,7 +41,7 @@ public class CommitCustomGsonDeserializer implements JsonDeserializer<Commit> {
         } catch (Exception e) {
             Log.e("Json Parse", "Error parsing Commit message's json: ");
             e.printStackTrace();
-            return null; //todo return template?
+            return null;
         }
     }
 }
