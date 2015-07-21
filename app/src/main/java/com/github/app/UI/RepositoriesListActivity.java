@@ -2,10 +2,8 @@ package com.github.app.UI;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,6 +17,8 @@ import com.github.app.util.Utils;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.List;
+
+import static com.github.app.util.Utils.*;
 
 public class RepositoriesListActivity extends BaseActivity implements LoaderCallback<List<Repository>> {
 
@@ -47,7 +47,7 @@ public class RepositoriesListActivity extends BaseActivity implements LoaderCall
 
     @Override
     public void onLoadFailure(Exception ex) {
-        Utils.notifyNetworkIssues(this, ex);
+        notifyNetworkIssues(this, ex);
         List page = dao().findReposAtPage(mCurrentpage - 1);
         attachDataToAdapter(page);
     }
@@ -64,11 +64,17 @@ public class RepositoriesListActivity extends BaseActivity implements LoaderCall
             mRecyclerAdapter.attachLoadedData(result);
         }
     }
+
     private void initRecyclerView(List<Repository> repositories) {
+        if (repositories.isEmpty()) {
+            notifyWithMessage(this, "No repositories found");
+            mProgressWheel.setVisibility(View.INVISIBLE);
+            return;
+        }
         mRecyclerAdapter = new RepositoryRecyclerViewAdapter(repositories, this);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(lm);
-        mRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
             @Override
             public void onLoadMore(int current_page) {
                 runNewLoadDataTask();

@@ -22,6 +22,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 import java.util.List;
 
 import static com.github.app.util.Constants.*;
+import static com.github.app.util.Utils.notifyWithMessage;
 
 public class CommitsListActivity extends BaseActivity implements LoaderCallback<List<Commit>> {
 
@@ -74,6 +75,12 @@ public class CommitsListActivity extends BaseActivity implements LoaderCallback<
     }
 
     private void initRecyclerView(List<Commit> commits) {
+        if (commits.isEmpty()) {
+            notifyWithMessage(this, "No commits yet!");
+            mProgressWheel.setVisibility(View.INVISIBLE);
+            return;
+        }
+
         mRecyclerAdapter = new CommitsRecyclerViewAdapter(commits, this);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(lm);

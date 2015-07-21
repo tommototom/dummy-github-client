@@ -2,16 +2,15 @@ package com.github.app.UI;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 import com.github.app.App;
 import android.widget.Button;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.github.app.R;
+import com.github.app.util.Utils;
 
 import static android.content.Intent.*;
 import static com.github.app.util.Constants.*;
@@ -54,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(FLAG_ACTIVITY_NO_HISTORY | FLAG_FROM_BACKGROUND);
         startActivity(intent);
 
-        Toast.makeText(App.get(), "Redirecting to github", Toast.LENGTH_LONG).show();
+        Utils.notifyWithMessage(App.get(), "Redirecting to github");
     }
 
 }

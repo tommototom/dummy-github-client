@@ -1,13 +1,10 @@
 package com.github.app.UI;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 import com.github.app.App;
 import com.github.app.R;
 import com.github.app.util.Utils;
@@ -18,6 +15,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 import static com.github.app.util.Constants.*;
+import static com.github.app.util.Utils.*;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -28,7 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         if (wasOauthAndSucceed()) {
-            String requestCode = Utils.splitUriQuery(getIntent().getData()).get("code");;
+            String requestCode = splitUriQuery(getIntent().getData()).get("code");;
             authorizeWithRequestCode(requestCode);
         } else {
             showAuthFailed();
@@ -52,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 try {
                     Response response = App.getHttpClient().newCall(request).execute();
                     String query = response.body().string();
-                    String token = Utils.splitUriQuery(query).get(ACCESS_TOKEN_KEY);
+                    String token = splitUriQuery(query).get(ACCESS_TOKEN_KEY);
                     getSharedPreferences(APP_PREFS, MODE_PRIVATE)
                             .edit()
                             .putString(ACCESS_TOKEN_KEY, token)
@@ -79,7 +77,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void showAuthFailed() {
-        Toast.makeText(App.get(), "Auth failed", Toast.LENGTH_SHORT);
+        notifyWithMessage(App.get(), "Authentification failed");
         finish();
     }
 
@@ -92,7 +90,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Toast.makeText(App.get(), "Back in app", Toast.LENGTH_SHORT).show();
 
         final Uri uri = intent.getData();
         if (uri != null) {

@@ -19,6 +19,7 @@ import com.github.app.R;
 import com.github.app.model.Commit;
 import com.github.app.model.CommitAdapterItem;
 import com.github.app.model.CommitsTitle;
+import com.github.app.util.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -135,7 +136,7 @@ public class CommitsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         public void onNegative(MaterialDialog dialog) {
                             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                             clipboard.setPrimaryClip(ClipData.newPlainText("asdsad", mCommit.getSha()));
-                            Toast.makeText(context, "Copied: " + mCommit.getSha(), Toast.LENGTH_SHORT).show();
+                            Utils.notifyWithMessage(context, "Copied: " + mCommit.getSha());
                         }
                     })
                     .show();
