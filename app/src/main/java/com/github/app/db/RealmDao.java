@@ -21,4 +21,6 @@ public interface RealmDao {
     List<Repository> findReposAtPage(int page);
 
     List<Commit> findCommitsAtPage(int page, String repoName);
+
+    void close();
 }

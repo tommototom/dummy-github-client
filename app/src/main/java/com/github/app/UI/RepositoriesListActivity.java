@@ -20,7 +20,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.List;
 
-public class RepositoriesListActivity extends AppCompatActivity implements LoaderCallback<List<Repository>> {
+public class RepositoriesListActivity extends BaseActivity implements LoaderCallback<List<Repository>> {
 
     @InjectView(R.id.progress_wheel)
     ProgressWheel mProgressWheel;
@@ -41,14 +41,14 @@ public class RepositoriesListActivity extends AppCompatActivity implements Loade
 
     private void runNewLoadDataTask() {
         RepositoriesLoader loader = new RepositoriesLoader(mCurrentpage++, this, App.getApiService());
-        RetrofitLoaderManager.init(getLoaderManager(), mCurrentpage, loader, this); // provide loader id the same as page number
+        RetrofitLoaderManager.init(getLoaderManager(), mCurrentpage, loader, this, dao()); // provide loader id the same as page number
         // todo check if repo ids for pages interferes commit's loaders ids
     }
 
     @Override
     public void onLoadFailure(Exception ex) {
         Utils.notifyNetworkIssues(this, ex);
-        List page = App.getDaoInstance().findReposAtPage(mCurrentpage - 1);
+        List page = dao().findReposAtPage(mCurrentpage - 1);
         attachDataToAdapter(page);
     }
 

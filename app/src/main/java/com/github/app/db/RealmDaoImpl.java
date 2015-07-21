@@ -1,5 +1,6 @@
 package com.github.app.db;
 
+import android.content.Context;
 import android.util.Log;
 import com.github.app.App;
 import com.github.app.model.Commit;
@@ -13,6 +14,12 @@ import java.util.List;
 
 
 public class RealmDaoImpl implements RealmDao{
+
+    private Realm mRealmInstance;
+
+    public RealmDaoImpl(Context context) {
+        this.mRealmInstance = Realm.getInstance(context);
+    }
 
     /**
      * implements create or update action to given entity
@@ -124,7 +131,12 @@ public class RealmDaoImpl implements RealmDao{
                 .findAll();
     }
 
-    private static Realm realm() {
-        return App.getRealmInstance();
+    @Override
+    public void close() {
+        realm().close();
+    }
+
+    private Realm realm() {
+        return mRealmInstance;
     }
 }

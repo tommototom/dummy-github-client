@@ -30,8 +30,6 @@ public class App extends Application {
     private static OkHttpClient sClient;
     private static RestAdapter sRestAdapter;
     private static GithubApiService sApiService;
-    private static Realm sRealmInstance;
-    private static RealmDaoImpl sDaoImpl;
 
 
     @Override
@@ -42,8 +40,6 @@ public class App extends Application {
         initHttpClientWithCookieManager();
 
         initRestAdapter();
-
-        initRealmObj();
     }
 
     /**
@@ -95,11 +91,6 @@ public class App extends Application {
     }
 
 
-    private void initRealmObj() {
-        sRealmInstance = Realm.getInstance(this);
-    }
-
-
     /**
      * returns link to application context
      */
@@ -122,12 +113,4 @@ public class App extends Application {
         return sClient;
     }
 
-    public static Realm getRealmInstance() {
-        return sRealmInstance;
-    }
-
-    public static RealmDao getDaoInstance() {
-        if (sDaoImpl == null) sDaoImpl = new RealmDaoImpl();
-        return sDaoImpl;
-    }
 }

@@ -5,6 +5,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
 import com.github.app.App;
+import com.github.app.UI.BaseActivity;
 import com.github.app.db.RealmDao;
 import com.google.gson.reflect.TypeToken;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class RetrofitLoaderManager {
 
     public static <E, R> void init(final LoaderManager manager, final int loaderId,
-            final RetrofitLoader<E, R> loader, final LoaderCallback<E> callback) {
+            final RetrofitLoader<E, R> loader, final LoaderCallback<E> callback, final RealmDao dao) {
         manager.initLoader(loaderId, Bundle.EMPTY, new LoaderCallbacks<Response<E>>() {
 
             @Override
@@ -28,8 +29,6 @@ public class RetrofitLoaderManager {
                 if (data.hasError()) {
                     callback.onLoadFailure(data.getException());
                 } else {
-                    //todo copy everything except images in local database
-                    RealmDao dao = App.getDaoInstance();
                     E result = data.getResult();
 
                     if (isLoaderPageable(loader)) {
@@ -40,6 +39,7 @@ public class RetrofitLoaderManager {
                         dao.delete(result);
                         dao.save(result);
                     }
+
                     callback.onLoadSuccess(result);
                 }
             }

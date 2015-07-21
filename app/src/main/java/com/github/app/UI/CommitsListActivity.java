@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,7 +23,7 @@ import java.util.List;
 
 import static com.github.app.util.Constants.*;
 
-public class CommitsListActivity extends AppCompatActivity implements LoaderCallback<List<Commit>> {
+public class CommitsListActivity extends BaseActivity implements LoaderCallback<List<Commit>> {
 
     @InjectView(R.id.commits_recycler_view)
     RecyclerView mRecyclerView;
@@ -50,14 +49,14 @@ public class CommitsListActivity extends AppCompatActivity implements LoaderCall
 
     private void runNewLoadDataTask() {
         CommitsLoader loader = new CommitsLoader(this, App.getApiService(), mRepoOwner, mCurrentPage++, mRepoName);
-        RetrofitLoaderManager.init(getLoaderManager(), mCurrentPage, loader, this); // provide loader id the same as page number
+        RetrofitLoaderManager.init(getLoaderManager(), mCurrentPage, loader, this, dao()); // provide loader id the same as page number
         // todo check if repo ids for pages interferes commit's loaders ids
     }
 
     @Override
     public void onLoadFailure(Exception ex) {
         Utils.notifyNetworkIssues(this, ex);
-        List page = App.getDaoInstance().findCommitsAtPage(mCurrentPage - 1, mRepoName);
+        List page = dao().findCommitsAtPage(mCurrentPage - 1, mRepoName);
         attachDataToAdapter(page);
     }
 
